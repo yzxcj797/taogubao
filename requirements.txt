@@ -1,0 +1,25 @@
+# Web 框架
+flask>=3.0.0
+
+# 爬虫相关
+scrapling[all]>=0.3.0
+playwright>=1.40.0
+
+# LLM 相关
+openai>=1.0.0
+zhipuai>=2.0.0
+langgraph>=0.2.0
+
+# 向量检索
+chromadb>=0.4.0
+sentence-transformers>=2.2.0
+
+# 数据处理
+pandas>=2.0.0
+numpy>=1.24.0
+pydantic>=2.0.0
+python-dateutil>=2.8.0
+
+# 工具库
+loguru>=0.7.0
+tqdm>=4.65.0

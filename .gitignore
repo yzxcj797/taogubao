@@ -1,0 +1,32 @@
+# Environment
+.env
+!.env.example
+
+# WorkBuddy
+.workbuddy/
+
+# Changelog
+CHANGELOG.md
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Logs
+logs/
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store

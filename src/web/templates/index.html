@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#409EFF">
+    <title>淘股宝 - 投资分析系统</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+            </div>
+            <div class="logo-text">
+                <h1 class="logo">淘股宝</h1>
+                <span class="logo-sub">Investment Analysis</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <button class="nav-item active" data-tab="dashboard">
+                <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                <span>仪表盘</span>
+            </button>
+            <button class="nav-item" data-tab="analysis">
+                <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+                <span>投资分析</span>
+            </button>
+            <button class="nav-item" data-tab="posts">
+                <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+                <span>精品帖子</span>
+            </button>
+            <button class="nav-item" data-tab="radar">
+                <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+                <span>盘口雷达</span>
+            </button>
+            <button class="nav-item" data-tab="hot">
+                <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg>
+                <span>人气热股</span>
+            </button>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="llm-badge" id="llmBadge">--</div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Dashboard Tab -->
+        <div class="tab-panel active" id="tab-dashboard">
+            <!-- Welcome Banner -->
+            <div class="dashboard-welcome">
+                <div class="welcome-text">
+                    <h1>欢迎使用淘股宝</h1>
+                    <p>基于 LangGraph 多 Agent 协作框架的智能投资分析系统，让 AI 模拟真实投资团队协同工作</p>
+                </div>
+                <div class="welcome-badge">
+                    <span class="version-tag">v1.0</span>
+                    <span class="agent-badge">
+                        <svg viewBox="0 0 24 24" width="12" height="12"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                        Multi-Agent
+                    </span>
+                    <button class="settings-btn" onclick="openSettingsModal()" title="系统设置">
+                        <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Agent Architecture -->
+            <div class="agent-arch">
+                <div class="agent-arch-title">
+                    <svg viewBox="0 0 24 24" width="18" height="18" style="color:var(--brand-primary);"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    <span>Agent 协作架构</span>
+                </div>
+                <div class="agent-arch-flow">
+                    <div class="agent-node agent-node-news">
+                        <div class="agent-node-icon">
+                            <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M16 2H8C5.79 2 4 3.79 4 6v12c0 2.21 1.79 4 4 4h8c2.21 0 4-1.79 4-4V6c0-2.21-1.79-4-4-4zm0 18H8c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2z"/></svg>
+                        </div>
+                        <div class="agent-node-body">
+                            <div class="agent-node-name">NewsAgent</div>
+                            <div class="agent-node-desc">资讯采集 Agent</div>
+                            <div class="agent-node-detail">采集/读取市场资讯，LLM 降级生成</div>
+                        </div>
+                    </div>
+                    <div class="agent-arrow">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                    </div>
+                    <div class="agent-node agent-node-blogger">
+                        <div class="agent-node-icon">
+                            <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+                        </div>
+                        <div class="agent-node-body">
+                            <div class="agent-node-name">BloggerAgent</div>
+                            <div class="agent-node-desc">博主讨论 Agent</div>
+                            <div class="agent-node-detail">模拟多位知名博主多轮讨论，碰撞观点</div>
+                        </div>
+                    </div>
+                    <div class="agent-arrow">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                    </div>
+                    <div class="agent-node agent-node-risk">
+                        <div class="agent-node-icon">
+                            <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                        </div>
+                        <div class="agent-node-body">
+                            <div class="agent-node-name">RiskAgent</div>
+                            <div class="agent-node-desc">风险评估 Agent</div>
+                            <div class="agent-node-detail">综合资讯与讨论结果，量化评估风险等级</div>
+                        </div>
+                    </div>
+                    <div class="agent-arrow">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                    </div>
+                    <div class="agent-node agent-node-decision">
+                        <div class="agent-node-icon">
+                            <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                        </div>
+                        <div class="agent-node-body">
+                            <div class="agent-node-name">DeciderAgent</div>
+                            <div class="agent-node-desc">决策汇总 Agent</div>
+                            <div class="agent-node-detail">汇总所有 Agent 输出，给出最终投资决策</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="agent-arch-caption">LangGraph 编排 · SSE 实时推送 · 顺序执行 + 状态共享</div>
+            </div>
+
+            <!-- Feature Cards -->
+            <div class="dashboard-features">
+                <div class="feature-card" onclick="switchTab('analysis')">
+                    <div class="feature-icon feature-icon-blue">
+                        <svg viewBox="0 0 24 24" width="28" height="28"><path fill="currentColor" d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zM6 20V4h5v7h7v9H6z"/></svg>
+                    </div>
+                    <h3>投资分析</h3>
+                    <p>输入投资问题，系统自动采集市场资讯，模拟多位知名博主进行多轮讨论，综合评估风险并给出投资决策建议。</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">多 Agent 协作</span>
+                        <span class="feature-tag">SSE 实时流</span>
+                        <span class="feature-tag">多轮讨论</span>
+                    </div>
+                    <div class="feature-arrow">
+                        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                    </div>
+                </div>
+
+                <div class="feature-card" onclick="switchTab('posts')">
+                    <div class="feature-icon feature-icon-green">
+                        <svg viewBox="0 0 24 24" width="28" height="28"><path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+                    </div>
+                    <h3>精品帖子</h3>
+                    <p>抓取淘股吧知名博主的精品帖子，支持多博主批量抓取、日期范围筛选，帖子以折叠卡片形式展示，支持懒加载。</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">批量抓取</span>
+                        <span class="feature-tag">8 位博主</span>
+                        <span class="feature-tag">懒加载</span>
+                    </div>
+                    <div class="feature-arrow">
+                        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                    </div>
+                </div>
+
+                <div class="feature-card" onclick="switchTab('radar')">
+                    <div class="feature-icon feature-icon-orange">
+                        <svg viewBox="0 0 24 24" width="28" height="28"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    </div>
+                    <h3>盘口雷达</h3>
+                    <p>全市场日K数据管理，支持增量更新。内置多种涨幅筛选规则（连板、N日涨幅、首板等），快速发现异动个股。</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">全市场数据</span>
+                        <span class="feature-tag">8 种规则</span>
+                        <span class="feature-tag">增量更新</span>
+                    </div>
+                    <div class="feature-arrow">
+                        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Status -->
+            <div class="dashboard-status">
+                <div class="status-card">
+                    <div class="status-header">
+                        <svg viewBox="0 0 24 24" width="16" height="16" style="color: var(--brand-primary);"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                        <span>系统状态</span>
+                    </div>
+                    <div class="status-items">
+                        <div class="status-item">
+                            <span class="status-label">LLM 服务</span>
+                            <span class="status-value" id="dashLlmStatus">检测中...</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">盘口数据</span>
+                            <span class="status-value" id="dashRadarStatus">检测中...</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">历史报告</span>
+                            <span class="status-value" id="dashHistoryCount">检测中...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="status-card">
+                    <div class="status-header">
+                        <svg viewBox="0 0 24 24" width="16" height="16" style="color: var(--brand-primary);"><path fill="currentColor" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                        <span>快捷操作</span>
+                    </div>
+                    <div class="status-items">
+                        <div class="quick-action" onclick="switchTab('analysis')">
+                            <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+                            <span>发起投资分析</span>
+                        </div>
+                        <div class="quick-action" onclick="switchTab('posts')">
+                            <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                            <span>抓取精品帖子</span>
+                        </div>
+                        <div class="quick-action" onclick="switchTab('radar')">
+                            <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                            <span>盘口涨幅筛选</span>
+                        </div>
+                        <div class="quick-action" onclick="switchTab('hot')">
+                            <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67z"/></svg>
+                            <span>查看人气热股</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hot Stocks Overview (仪表盘精简版) -->
+            <div class="dashboard-hot-stocks">
+                <div class="status-card">
+                    <div class="status-header" style="cursor:pointer;" onclick="switchTab('hot')">
+                        <svg viewBox="0 0 24 24" width="16" height="16" style="color: #F56C6C;"><path fill="currentColor" d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67z"/></svg>
+                        <span>人气热股</span>
+                        <span class="hot-more-link">查看全部 &rarr;</span>
+                    </div>
+                    <div class="hot-overview-tabs">
+                        <button class="hot-tab active" data-ov="dc" onclick="switchDashHotTab('dc', this)">东方财富</button>
+                        <button class="hot-tab" data-ov="ths" onclick="switchDashHotTab('ths', this)">同花顺</button>
+                        <button class="hot-tab" data-ov="both" onclick="switchDashHotTab('both', this)">双榜交集</button>
+                    </div>
+                    <div id="dashHotContent">
+                        <div class="empty-state" style="padding:20px;">加载中...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Framework Diagram -->
+<!--            <div class="framework-section">-->
+<!--                <div class="framework-title">-->
+<!--                    <svg viewBox="0 0 24 24" width="18" height="18" style="color: var(&#45;&#45;brand-primary);"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>-->
+<!--                    <span>项目框架</span>-->
+<!--                </div>-->
+<!--                <div class="framework-diagram">-->
+<!--                    &lt;!&ndash; Data Sources &ndash;&gt;-->
+<!--                    <div class="framework-column">-->
+<!--                        <div class="framework-group framework-group-source">-->
+<!--                            <div class="framework-group-title">数据源</div>-->
+<!--                            <div class="framework-items">-->
+<!--                                <div class="framework-item">-->
+<!--                                    <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8h16v10z"/></svg>-->
+<!--                                    <span>淘股吧</span>-->
+<!--                                </div>-->
+<!--                                <div class="framework-item">-->
+<!--                                    <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>-->
+<!--                                    <span>东方财富</span>-->
+<!--                                </div>-->
+<!--                                <div class="framework-item">-->
+<!--                                    <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>-->
+<!--                                    <span>同花顺</span>-->
+<!--                                </div>-->
+<!--                                <div class="framework-item">-->
+<!--                                    <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>-->
+<!--                                    <span>Tushare</span>-->
+<!--                                </div>-->
+<!--                                <div class="framework-item">-->
+<!--                                    <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/></svg>-->
+<!--                                    <span>新闻资讯</span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Arrow &ndash;&gt;-->
+<!--                    <div class="framework-arrow">-->
+<!--                        <svg viewBox="0 0 24 24" width="28" height="28"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Agents &ndash;&gt;-->
+<!--                    <div class="framework-column framework-wide">-->
+<!--                        <div class="framework-group framework-group-agent">-->
+<!--                            <div class="framework-group-title">多 Agent 协作层</div>-->
+<!--                            <div class="framework-items framework-grid">-->
+<!--                                <div class="framework-item framework-item-agent">-->
+<!--                                    <div class="agent-badge-mini agent-badge-news">N</div>-->
+<!--                                    <div class="agent-info">-->
+<!--                                        <span class="agent-name">NewsAgent</span>-->
+<!--                                        <span class="agent-desc">资讯采集 · LLM 生成</span>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="framework-item framework-item-agent">-->
+<!--                                    <div class="agent-badge-mini agent-badge-blogger">B</div>-->
+<!--                                    <div class="agent-info">-->
+<!--                                        <span class="agent-name">BloggerAgent</span>-->
+<!--                                        <span class="agent-desc">博主讨论 · 观点碰撞</span>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="framework-item framework-item-agent">-->
+<!--                                    <div class="agent-badge-mini agent-badge-risk">R</div>-->
+<!--                                    <div class="agent-info">-->
+<!--                                        <span class="agent-name">RiskAgent</span>-->
+<!--                                        <span class="agent-desc">风险评估 · 量化分析</span>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="framework-item framework-item-agent">-->
+<!--                                    <div class="agent-badge-mini agent-badge-decision">D</div>-->
+<!--                                    <div class="agent-info">-->
+<!--                                        <span class="agent-name">DeciderAgent</span>-->
+<!--                                        <span class="agent-desc">决策汇总 · 投资建议</span>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Arrow &ndash;&gt;-->
+<!--                    <div class="framework-arrow">-->
+<!--                        <svg viewBox="0 0 24 24" width="28" height="28"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Outputs &ndash;&gt;-->
+<!--                    <div class="framework-column">-->
+<!--                        <div class="framework-group framework-group-output">-->
+<!--                            <div class="framework-group-title">输出</div>-->
+<!--                            <div class="framework-items">-->
+<!--                                <div class="framework-item">-->
+<!--                                    <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>-->
+<!--                                    <span>投资分析报告</span>-->
+<!--                                </div>-->
+<!--                                <div class="framework-item">-->
+<!--                                    <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>-->
+<!--                                    <span>风险评估</span>-->
+<!--                                </div>-->
+<!--                                <div class="framework-item">-->
+<!--                                    <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>-->
+<!--                                    <span>精品帖子</span>-->
+<!--                                </div>-->
+<!--                                <div class="framework-item">-->
+<!--                                    <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>-->
+<!--                                    <span>涨幅筛选</span>-->
+<!--                                </div>-->
+<!--                                <div class="framework-item">-->
+<!--                                    <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67z"/></svg>-->
+<!--                                    <span>人气热股</span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Tech Tags &ndash;&gt;-->
+<!--                <div class="framework-tech-tags">-->
+<!--                    <span class="framework-tech-tag">Flask</span>-->
+<!--                    <span class="framework-tech-tag">LangGraph</span>-->
+<!--                    <span class="framework-tech-tag">ChromaDB</span>-->
+<!--                    <span class="framework-tech-tag">SSE</span>-->
+<!--                    <span class="framework-tech-tag">Scrapling</span>-->
+<!--                    <span class="framework-tech-tag">Playwright</span>-->
+<!--                </div>-->
+<!--            </div>-->
+
+            <!-- Tech Stack -->
+            <div class="dashboard-tech">
+                <div class="tech-item">
+                    <span class="tech-label">技术架构</span>
+                    <span class="tech-value">Flask + LangGraph + ChromaDB</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-label">数据源</span>
+                    <span class="tech-value">淘股吧 + 东方财富 + 同花顺 + Tushare + LLM</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-label">通信协议</span>
+                    <span class="tech-value">SSE Server-Sent Events</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Tab -->
+        <div class="tab-panel" id="tab-analysis">
+            <!-- Config Bar -->
+            <div class="config-bar">
+                <div class="config-group">
+                    <label>讨论参与者</label>
+                    <div class="blogger-hint">
+                        <svg viewBox="0 0 24 24" width="14" height="14" style="flex-shrink:0;"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        <span>以下为模拟知名博主的数字人格，系统将基于各博主的风格与观点进行多轮讨论。点击可选取或取消参与者。</span>
+                    </div>
+                    <div class="blogger-tags" id="bloggerTags"></div>
+                    <div class="blogger-actions">
+                        <button class="btn-secondary btn-sm" onclick="openPersonasModal()">
+                            <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                            查看人格
+                        </button>
+                        <button class="btn-secondary btn-sm" onclick="openPersonaEditor()">
+                            <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                            配置人格
+                        </button>
+                        <button class="btn-primary btn-sm" onclick="openPersonaGenerator()">
+                            <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                            LLM 生成人格
+                        </button>
+                    </div>
+                </div>
+                <div class="config-group">
+                    <label>轮数</label>
+                    <select id="roundsSelect" class="config-select">
+                        <option value="1">1 轮</option>
+                        <option value="2" selected>2 轮</option>
+                        <option value="3">3 轮</option>
+                    </select>
+                </div>
+                <div class="config-group">
+                    <label>LLM</label>
+                    <select id="llmSelect" class="config-select">
+                        <option value="">默认</option>
+                        <option value="zhipu">智谱 AI</option>
+                        <option value="deepseek">DeepSeek</option>
+                        <option value="openai">OpenAI</option>
+                        <option value="qwen">通义千问</option>
+                        <option value="minimax">MiniMax</option>
+                        <option value="kimi">Kimi</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Analysis Pipeline -->
+            <section class="result-card" id="pipelineCard">
+                <div class="card-header" onclick="toggleCard('pipelineCard')">
+                    <div class="card-header-left">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                        <h3>分析流程</h3>
+                    </div>
+                    <svg class="collapse-chevron" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                </div>
+                <div class="card-body-wrapper">
+                    <div class="card-body pipeline-body">
+                        <div class="pipeline-flow">
+                            <div class="pipeline-step pipeline-step-input">
+                                <div class="pipeline-step-num">0</div>
+                                <div class="pipeline-step-body">
+                                    <div class="pipeline-step-title">用户输入</div>
+                                    <div class="pipeline-step-desc">输入投资问题 + 选取博主参与者 + 配置讨论轮数</div>
+                                </div>
+                            </div>
+                            <div class="pipeline-connector"></div>
+                            <div class="pipeline-step pipeline-step-news">
+                                <div class="pipeline-step-num">1</div>
+                                <div class="pipeline-step-body">
+                                    <div class="pipeline-step-title">
+                                        <span class="pipeline-agent-tag agent-tag-news">NewsAgent</span>
+                                        市场资讯采集
+                                    </div>
+                                    <div class="pipeline-step-desc">读取本地资讯文件（output/news_input/），若无文件则由 LLM 自动生成市场资讯</div>
+                                    <div class="pipeline-step-output">输出：市场资讯全文</div>
+                                </div>
+                            </div>
+                            <div class="pipeline-connector"></div>
+                            <div class="pipeline-step pipeline-step-blogger">
+                                <div class="pipeline-step-num">2</div>
+                                <div class="pipeline-step-body">
+                                    <div class="pipeline-step-title">
+                                        <span class="pipeline-agent-tag agent-tag-blogger">BloggerAgent</span>
+                                        博主多轮讨论
+                                    </div>
+                                    <div class="pipeline-step-desc">每位博主基于市场资讯，围绕用户问题发表观点，进行多轮深度讨论</div>
+                                    <div class="pipeline-step-output">输出：各轮次讨论记录 + 共识总结</div>
+                                </div>
+                            </div>
+                            <div class="pipeline-connector"></div>
+                            <div class="pipeline-step pipeline-step-risk">
+                                <div class="pipeline-step-num">3</div>
+                                <div class="pipeline-step-body">
+                                    <div class="pipeline-step-title">
+                                        <span class="pipeline-agent-tag agent-tag-risk">RiskAgent</span>
+                                        风险评估
+                                    </div>
+                                    <div class="pipeline-step-desc">综合市场资讯和博主讨论结果，分析潜在风险因素，量化风险等级</div>
+                                    <div class="pipeline-step-output">输出：风险评估报告 + 风险等级（低/中/高）</div>
+                                </div>
+                            </div>
+                            <div class="pipeline-connector"></div>
+                            <div class="pipeline-step pipeline-step-decision">
+                                <div class="pipeline-step-num">4</div>
+                                <div class="pipeline-step-body">
+                                    <div class="pipeline-step-title">
+                                        <span class="pipeline-agent-tag agent-tag-decision">DeciderAgent</span>
+                                        综合决策
+                                    </div>
+                                    <div class="pipeline-step-desc">汇总资讯、讨论、风控三方输出，给出最终投资建议与决策依据</div>
+                                    <div class="pipeline-step-output">输出：投资决策报告（含建议、依据、风险提示）</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pipeline-footer">
+                            <span class="pipeline-tech">LangGraph 状态机编排</span>
+                            <span class="pipeline-tech">AgentState 共享状态</span>
+                            <span class="pipeline-tech">SSE 实时流推送</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- News Input Config Card (资讯配置) -->
+            <section class="result-card" id="newsConfigCard">
+                <div class="card-header" onclick="toggleCard('newsConfigCard')">
+                    <div class="card-header-left">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zM6 20V4h5v7h7v9H6z"/></svg>
+                        <h3>资讯配置</h3>
+                    </div>
+                    <div class="card-meta">
+                        <span class="news-input-count" id="newsInputCount">0 个文件</span>
+                        <svg class="collapse-chevron" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                    </div>
+                </div>
+                <div class="card-body-wrapper">
+                    <div class="card-body news-config-body">
+                        <!-- Tab switcher -->
+                        <div class="news-config-tabs">
+                            <button class="news-config-tab active" data-nctab="input" onclick="switchNewsConfigTab('input', this)">
+                                <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                                手动输入
+                            </button>
+                            <button class="news-config-tab" data-nctab="import" onclick="switchNewsConfigTab('import', this)">
+                                <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                                从帖子导入
+                            </button>
+                            <button class="news-config-tab" data-nctab="manage" onclick="switchNewsConfigTab('manage', this)">
+                                <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                管理文件
+                            </button>
+                            <button class="news-config-tab" data-nctab="generate" onclick="switchNewsConfigTab('generate', this)">
+                                <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+                                AI 生成
+                            </button>
+                        </div>
+
+                        <!-- Tab: Manual Input -->
+                        <div class="news-config-panel active" id="newsPanelInput">
+                            <textarea id="newsInputTextarea" class="news-config-textarea" placeholder="粘贴你想作为资讯的文本内容...&#10;&#10;提示：这里的文本将作为投资分析的市场资讯来源，替代 LLM 自动生成。&#10;&#10;可先查看 管理文件 中是否有资讯文件" rows="6"></textarea>
+                            <div class="news-config-actions">
+                                <input type="text" id="newsInputFilename" class="news-config-filename" placeholder="文件名（可选，默认自动生成）">
+                                <button class="btn-primary radar-screen-btn" onclick="saveNewsInput()">
+                                    <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                                    保存到资讯目录
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tab: Import from news/ -->
+                        <div class="news-config-panel" id="newsPanelImport">
+                            <div class="news-config-hint">
+                                <svg viewBox="0 0 24 24" width="14" height="14" style="flex-shrink:0;"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                                <span>将 output/news/ 下的 txt 文件复制到 output/news_input/，供投资分析使用</span>
+                            </div>
+                            <div class="news-import-list" id="newsImportList">
+                                <div class="empty-state" style="padding:20px;">加载中...</div>
+                            </div>
+                            <button class="btn-primary radar-screen-btn" onclick="importSelectedNews()" id="newsImportBtn" style="margin-top:12px;">
+                                <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                                导入选中的文件
+                            </button>
+                        </div>
+
+                        <!-- Tab: Manage Files -->
+                        <div class="news-config-panel" id="newsPanelManage">
+                            <div class="news-config-hint">
+                                <svg viewBox="0 0 24 24" width="14" height="14" style="flex-shrink:0;"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                                <span>列表中的所有文件均会作为资讯输入，参与投资分析的市场背景</span>
+                            </div>
+                            <div class="news-manage-list" id="newsManageList">
+                                <div class="empty-state" style="padding:20px;">加载中...</div>
+                            </div>
+                        </div>
+
+                        <!-- Tab: AI Generate -->
+                        <div class="news-config-panel" id="newsPanelGenerate">
+                            <div class="news-config-hint">
+                                <svg viewBox="0 0 24 24" width="14" height="14" style="flex-shrink:0;"><path fill="currentColor" d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+                                <span>由 LLM 基于当前时间自动生成 A 股市场资讯，可自定义关注主题</span>
+                            </div>
+                            <div class="news-generate-row">
+                                <input type="text" id="newsGenTopic" class="news-config-filename" placeholder="关注主题（可选，留空则生成全面市场资讯）">
+                                <button class="btn-primary radar-screen-btn" id="newsGenBtn" onclick="generateNews()">
+                                    <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+                                    生成资讯
+                                </button>
+                            </div>
+                            <div id="newsGenLoading" style="display:none;" class="news-gen-loading">
+                                <div class="news-gen-spinner"></div>
+                                <span>正在生成资讯，请稍候...</span>
+                            </div>
+                            <div id="newsGenResult" style="display:none;" class="news-gen-result">
+                                <textarea id="newsGenOutput" class="news-config-textarea" rows="10" readonly></textarea>
+                                <div class="news-gen-actions">
+                                    <button class="btn-primary radar-screen-btn" onclick="copyGenNews()">
+                                        <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                                        复制文本
+                                    </button>
+                                    <button class="btn-primary radar-screen-btn" style="background:var(--brand-primary-light);border-color:var(--brand-primary-light);" onclick="saveGenNews()">
+                                        <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                                        保存到资讯目录
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <textarea id="queryInput" placeholder="输入你的投资问题，例如：明天大盘怎么走？" rows="2"></textarea>
+                <button id="runBtn" class="btn-primary" onclick="startAnalysis()">
+                    <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+                    开始分析
+                </button>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar" id="progressBar" style="display:none;">
+                <div class="progress-steps" id="progressSteps">
+                    <div class="step" data-step="0">
+                        <div class="step-dot"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></div>
+                        <span>资讯获取</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" data-step="1">
+                        <div class="step-dot"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"/></svg></div>
+                        <span>博主讨论</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" data-step="2">
+                        <div class="step-dot"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg></div>
+                        <span>风险评估</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" data-step="3">
+                        <div class="step-dot"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M5.7 3h12.6c.7 0 1.2.6 1 1.3L17 15l1.3 2.7c.2.5-.2 1.3-1 1.3H7l-.5-1H5.7c-.7 0-1.2-.6-1-1.3L7 6H5.7c-.7 0-1.2-.6-1-1.3L5.7 3zM7 14h10l1.5-3H5.5L7 14zm-1 4h10.5l-1-2H7l-1 2z"/></svg></div>
+                        <span>最终决策</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Area -->
+            <div class="result-area" id="resultArea" style="display:none;">
+
+                <!-- 市场资讯 (Collapsible) -->
+                <section class="result-card" id="newsCard" style="display:none;">
+                    <div class="card-header" onclick="toggleCard('newsCard')">
+                        <div class="card-header-left">
+                            <svg class="icon" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                            <h3>市场资讯</h3>
+                        </div>
+                        <div class="card-meta">
+                            <span class="news-source-tag" id="newsSourceTag" style="display:none;">LLM 生成</span>
+                            <span class="card-time" id="newsTime"></span>
+                            <svg class="collapse-chevron" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                        </div>
+                    </div>
+                    <div class="card-body-wrapper">
+                        <div class="card-body news-content-body" id="newsContent"></div>
+                    </div>
+                </section>
+
+                <!-- 博主讨论 (Collapsible) -->
+                <section class="result-card" id="bloggersCard" style="display:none;">
+                    <div class="card-header" onclick="toggleCard('bloggersCard')">
+                        <div class="card-header-left">
+                            <svg class="icon" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"/></svg>
+                            <h3>博主讨论</h3>
+                        </div>
+                        <div class="card-meta">
+                            <svg class="collapse-chevron" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                        </div>
+                    </div>
+                    <div class="card-body-wrapper">
+                        <div class="card-body" id="bloggersContent"></div>
+                    </div>
+                </section>
+
+                <!-- 风险评估 (Collapsible) -->
+                <section class="result-card" id="riskCard" style="display:none;">
+                    <div class="card-header" onclick="toggleCard('riskCard')">
+                        <div class="card-header-left">
+                            <svg class="icon" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                            <h3>风险评估</h3>
+                        </div>
+                        <div class="card-meta">
+                            <span class="risk-badge" id="riskBadge"></span>
+                            <svg class="collapse-chevron" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                        </div>
+                    </div>
+                    <div class="card-body-wrapper">
+                        <div class="card-body" id="riskContent"></div>
+                    </div>
+                </section>
+
+                <!-- 最终决策 (Collapsible) -->
+                <section class="result-card result-card-highlight" id="decisionCard" style="display:none;">
+                    <div class="card-header" onclick="toggleCard('decisionCard')">
+                        <div class="card-header-left">
+                            <svg class="icon" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M5.7 3h12.6c.7 0 1.2.6 1 1.3L17 15l1.3 2.7c.2.5-.2 1.3-1 1.3H7l-.5-1H5.7c-.7 0-1.2-.6-1-1.3L7 6H5.7c-.7 0-1.2-.6-1-1.3L5.7 3zM7 14h10l1.5-3H5.5L7 14zm-1 4h10.5l-1-2H7l-1 2z"/></svg>
+                            <h3>最终决策</h3>
+                        </div>
+                        <div class="card-meta">
+                            <span class="card-time" id="decisionTime"></span>
+                            <svg class="collapse-chevron" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                        </div>
+                    </div>
+                    <div class="card-body-wrapper">
+                        <div class="card-body" id="decisionContent"></div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Done Banner -->
+            <div class="done-banner" id="doneBanner" style="display:none;">
+                <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                <span id="doneText">分析完成</span>
+            </div>
+
+            <!-- History Section (历史分析报告) -->
+            <section class="result-card" id="historyCard">
+                <div class="card-header" onclick="toggleCard('historyCard')">
+                    <div class="card-header-left">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M13 3a9 9 0 00-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0013 21a9 9 0 000-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+                        <h3>历史分析报告</h3>
+                    </div>
+                    <div class="card-meta">
+                        <svg class="collapse-chevron" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                    </div>
+                </div>
+                <div class="card-body-wrapper">
+                    <div class="card-body">
+                        <div class="history-list" id="historyList">
+                            <div class="empty-state">暂无报告</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Posts Tab -->
+        <div class="tab-panel" id="tab-posts">
+            <div class="history-header">
+                <h2>精品帖子</h2>
+            </div>
+
+            <!-- Crawler Card -->
+            <section class="result-card" id="crawlerCard">
+                <div class="card-header" onclick="toggleCard('crawlerCard')">
+                    <div class="card-header-left">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                        <h3>抓取帖子</h3>
+                    </div>
+                    <div class="card-meta">
+                        <svg class="collapse-chevron" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                    </div>
+                </div>
+                <div class="card-body-wrapper">
+                    <div class="card-body">
+                        <!-- Blogger selection -->
+                        <div class="crawler-section">
+                            <label class="crawler-label">选择博主</label>
+                            <div class="crawler-bloggers" id="crawlerBloggers"></div>
+                        </div>
+                        <!-- Date range -->
+                        <div class="crawler-section">
+                            <label class="crawler-label">日期范围</label>
+                            <div class="crawler-date-row">
+                                <input type="date" id="crawlerStartDate" class="radar-date-input">
+                                <span class="crawler-date-sep">至</span>
+                                <input type="date" id="crawlerEndDate" class="radar-date-input">
+                            </div>
+                        </div>
+                        <!-- Limits -->
+                        <div class="crawler-section">
+                            <label class="crawler-label">抓取限制</label>
+                            <div class="crawler-hint">每个博主最多只能抓取最新的30个帖子</div>
+                            <div class="crawler-limits-row">
+                                <div class="crawler-limit-item">
+                                    <span>每博主最大帖数</span>
+                                    <input type="number" id="crawlerMaxPosts" class="crawler-num-input" value="30" min="1" max="30">
+                                </div>
+                                <div class="crawler-limit-item">
+                                    <span>每篇最大评论数</span>
+                                    <input type="number" id="crawlerMaxComments" class="crawler-num-input" value="0" min="0" max="500">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Action button -->
+                        <button class="btn-primary radar-screen-btn" id="crawlerBtn" onclick="startCrawl()">
+                            <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                            开始抓取
+                        </button>
+                        <!-- Log -->
+                        <div class="radar-log" id="crawlerLog" style="display:none;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Posts list -->
+            <section class="result-card" id="postsListCard">
+                <div class="card-header" onclick="toggleCard('postsListCard')">
+                    <div class="card-header-left">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+                        <h3>帖子列表</h3>
+                    </div>
+                    <div class="card-meta">
+                        <span class="card-time" id="postsCount"></span>
+                        <svg class="collapse-chevron" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                    </div>
+                </div>
+                <div class="card-body-wrapper">
+                    <div class="card-body">
+                        <div class="posts-list" id="postsList">
+                            <div class="empty-state">暂无帖子</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Radar Tab -->
+        <div class="tab-panel" id="tab-radar">
+            <div class="history-header">
+                <h2>盘口雷达</h2>
+            </div>
+
+            <!-- Step 1: Data Status & Download -->
+            <section class="result-card" id="radarDataCard">
+                <div class="card-header" onclick="toggleCard('radarDataCard')">
+                    <div class="card-header-left">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                        <h3>数据管理</h3>
+                    </div>
+                    <div class="card-meta">
+                        <span class="radar-status-badge" id="radarDataBadge">检查中...</span>
+                        <svg class="collapse-chevron" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                    </div>
+                </div>
+                <div class="card-body-wrapper">
+                    <div class="card-body">
+                        <div class="radar-data-info" id="radarDataInfo">正在检查数据状态...</div>
+                        <button class="btn-primary radar-download-btn" id="radarDownloadBtn" onclick="startRadarDownload()">
+                            <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                            下载/更新数据
+                        </button>
+                        <div class="radar-log" id="radarDownloadLog" style="display:none;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 2: Screen -->
+            <section class="result-card" id="radarScreenCard">
+                <div class="card-header" onclick="toggleCard('radarScreenCard')">
+                    <div class="card-header-left">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                        <h3>涨幅筛选</h3>
+                    </div>
+                    <div class="card-meta">
+                        <svg class="collapse-chevron" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                    </div>
+                </div>
+                <div class="card-body-wrapper">
+                    <div class="card-body">
+                        <div class="radar-screen-controls">
+                            <div class="radar-date-group">
+                                <label>基准日期</label>
+                                <input type="date" id="radarDateInput" class="radar-date-input">
+                                <button class="btn-primary radar-screen-btn" id="radarScreenBtn" onclick="startRadarScreen()">
+                                    <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                                    开始筛选
+                                </button>
+                            </div>
+                        </div>
+                        <div class="radar-log" id="radarScreenLog" style="display:none;"></div>
+                        <div class="radar-results" id="radarResults" style="display:none;"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Hot Stocks Tab -->
+        <div class="tab-panel" id="tab-hot">
+            <div class="history-header">
+                <h2>人气热股</h2>
+                <div class="hot-refresh-row">
+                    <button class="btn-primary radar-screen-btn" id="hotRefreshBtn" onclick="refreshHotStocks()">
+                        <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                        刷新数据
+                    </button>
+                    <span class="hot-update-time" id="hotUpdateTime"></span>
+                </div>
+            </div>
+
+            <!-- Tab Switcher -->
+            <div class="hot-tabs">
+                <button class="hot-tab active" data-source="dc" onclick="switchHotTab('dc', this)">
+                    <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67z"/></svg>
+                    东方财富
+                </button>
+                <button class="hot-tab" data-source="ths" onclick="switchHotTab('ths', this)">
+                    <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67z"/></svg>
+                    同花顺
+                </button>
+                <button class="hot-tab" data-source="both" onclick="switchHotTab('both', this)">
+                    <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    双榜交集
+                </button>
+            </div>
+
+            <!-- Loading State -->
+            <div id="hotLoadingState" style="display:none;">
+                <div class="empty-state">
+                    <svg viewBox="0 0 24 24" width="24" height="24" style="animation: spin 1s linear infinite; color: var(--brand-primary); margin-bottom: 12px;"><path fill="currentColor" d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                    正在获取人气热股数据...
+                </div>
+            </div>
+
+            <!-- Error State -->
+            <div id="hotErrorState" style="display:none;">
+                <div class="empty-state" style="color: var(--color-danger);">
+                    <p id="hotErrorMsg">获取数据失败</p>
+                    <button class="btn-primary radar-screen-btn" style="margin-top: 12px;" onclick="loadHotStocksPage()">重试</button>
+                </div>
+            </div>
+
+            <!-- Table Content -->
+            <div id="hotTableContent" style="display:none;">
+                <div class="hot-table-wrap">
+                    <table class="hot-table" id="hotTable">
+                        <thead id="hotTableHead"></thead>
+                        <tbody id="hotTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Modal (全局) -->
+        <div class="modal-overlay" id="reportModal" style="display:none;">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 id="modalTitle">报告详情</h3>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-body" id="modalBody"></div>
+            </div>
+        </div>
+
+        <!-- Settings Modal (设置) -->
+        <div class="modal-overlay" id="settingsModal" style="display:none;">
+            <div class="modal modal-wide">
+                <div class="modal-header">
+                    <h3>
+                        <svg viewBox="0 0 24 24" width="18" height="18" style="vertical-align:middle; margin-right:6px;"><path fill="currentColor" d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
+                        系统设置
+                    </h3>
+                    <button class="modal-close" onclick="closeSettingsModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="settings-hint">
+                        <svg viewBox="0 0 24 24" width="14" height="14" style="flex-shrink:0;"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        <span>配置将保存到项目根目录的 .env 文件。API Key 仅保存在本地，不会上传。</span>
+                    </div>
+                    <div id="settingsContent">
+                        <div class="empty-state" style="padding:20px;">加载中...</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeSettingsModal()">取消</button>
+                    <button class="btn-primary" id="settingsSaveBtn" onclick="saveSettings()">
+                        <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                        保存配置
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Personas Modal (查看人格) -->
+        <div class="modal-overlay" id="personasModal" style="display:none;">
+            <div class="modal modal-wide">
+                <div class="modal-header">
+                    <h3>
+                        <svg viewBox="0 0 24 24" width="18" height="18" style="vertical-align:middle; margin-right:6px;"><path fill="currentColor" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                        博主人格一览
+                    </h3>
+                    <button class="modal-close" onclick="closePersonasModal()">&times;</button>
+                </div>
+                <div class="modal-body" id="personasModalBody">
+                    <div class="empty-state" style="padding:20px;">加载中...</div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closePersonasModal()">关闭</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Persona Editor Modal (配置人格) -->
+        <div class="modal-overlay" id="personaEditorModal" style="display:none;">
+            <div class="modal modal-wide">
+                <div class="modal-header">
+                    <h3>
+                        <svg viewBox="0 0 24 24" width="18" height="18" style="vertical-align:middle; margin-right:6px;"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                        <span id="personaEditorTitle">配置人格</span>
+                    </h3>
+                    <button class="modal-close" onclick="closePersonaEditor()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="persona-editor-list" id="personaEditorList">
+                        <div class="empty-state" style="padding:20px;">加载中...</div>
+                    </div>
+                    <div class="persona-editor-form" id="personaEditorForm" style="display:none;">
+                        <div class="form-group">
+                            <label>人格名称</label>
+                            <input type="text" id="personaNameInput" placeholder="例如：短线高手" />
+                        </div>
+                        <div class="form-group">
+                            <label>人格 Prompt</label>
+                            <textarea id="personaPromptInput" rows="12" placeholder="输入人格的系统提示词..."></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn-secondary" onclick="cancelPersonaEdit()">取消</button>
+                            <button class="btn-danger" id="personaDeleteBtn" onclick="deletePersona()" style="display:none;">删除</button>
+                            <button class="btn-primary" onclick="savePersona()">保存</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closePersonaEditor()">关闭</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Persona Generator Modal (LLM 生成人格) -->
+        <div class="modal-overlay" id="personaGeneratorModal" style="display:none;">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>
+                        <svg viewBox="0 0 24 24" width="18" height="18" style="vertical-align:middle; margin-right:6px;"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                        LLM 生成人格
+                    </h3>
+                    <button class="modal-close" onclick="closePersonaGenerator()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>人格概念描述</label>
+                        <textarea id="personaConceptInput" rows="4" placeholder="描述你想要的人格特点，例如：&#10;• 一个擅长短线打板的高手，重视竞价和情绪周期&#10;• 一个价值投资者，注重基本面和长期持有&#10;• 一个量化交易者，擅长技术指标和统计套利"></textarea>
+                    </div>
+                    <div id="generatedPromptPreview" style="display:none;">
+                        <div class="form-group">
+                            <label>生成的人格 Prompt</label>
+                            <textarea id="generatedPromptOutput" rows="10"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>人格名称（保存时使用）</label>
+                            <input type="text" id="generatedPersonaName" placeholder="例如：短线高手" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closePersonaGenerator()">取消</button>
+                    <button class="btn-secondary" id="regenerateBtn" onclick="regeneratePersona()" style="display:none;">重新生成</button>
+                    <button class="btn-primary" id="generatePersonaBtn" onclick="generatePersona()">生成</button>
+                    <button class="btn-primary" id="saveGeneratedBtn" onclick="saveGeneratedPersona()" style="display:none;">保存人格</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}?v=20260401"></script>
+</body>
+</html>
