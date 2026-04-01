@@ -4,8 +4,8 @@ playwright
 tqdm
 pandas
 openai
-scrapling
-curl_cffi
-patchright
-msgspec
-browserforge
+# scrapling
+# curl_cffi
+# patchright
+# msgspec
+# browserforge
