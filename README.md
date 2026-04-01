@@ -50,14 +50,15 @@
 ### 1. 安装依赖
 
 ```bash
-conda create -n taogubao python=3.10
+cd 项目根目录
+conda create -n taogubao python=3.10  #这一步如果卡住的话，关掉代理
 conda activate taogubao
-pip install -r requirements.txt --no-deps  #一定要使用--no-deps
+pip install -r requirements.txt --no-deps  #一定要使用--no-deps，总共依赖大小在500MB左右
 ```
 
 ### 2. 配置 API Key
 
-复制并编辑 `.env` 文件：
+在根目录下复制并编辑 `.env` 文件：
 
 ```bash
 cp .env.example .env
