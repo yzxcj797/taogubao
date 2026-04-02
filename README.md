@@ -203,7 +203,6 @@ copy .env.example .env
 
 ```env
 # 🤖 默认 LLM 提供商（可选：zhipu, deepseek, openai, qwen, minimax, kimi, openrouter）
-# 注意：其他厂商虽然代码里接入了，但没有实际运行测试
 DEFAULT_LLM_PROVIDER=zhipu
 
 # 🔗 OpenRouter（推荐，支持多种模型）
@@ -256,7 +255,7 @@ python -m src.cli.run_workflow
 
 <div align="center">
   
-> 📝 **说明**：以下 LLM 提供商均已接入代码，但仅 **⭐ 标注的四个** 已实际调试运行
+> 📝 **说明**：以下 LLM 提供商均已接入，但仅 **⭐ 标注的** 测试过 
   
 | 提供商 | Provider | Base URL | 环境变量 | 默认模型 | 🌟 特点 |
 |--------|----------|----------|----------|----------|---------|
