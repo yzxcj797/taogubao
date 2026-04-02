@@ -177,7 +177,7 @@ cd taogubao
 conda create -n taogubao python=3.10  # 如果卡住，请关闭代理
 conda activate taogubao
 
-# 安装依赖（有依赖冲突可以加 --no-deps，总依赖大小约 500MB）
+# 安装依赖（注意打开requirements.txt中的注释，总依赖大小约 500MB）
 pip install -r requirements.txt --no-deps
 ```
 
