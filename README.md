@@ -171,13 +171,13 @@ graph TB
 ```bash
 # 克隆项目
 git clone <repository-url>
-cd tgb5
+cd taogubao
 
 # 创建虚拟环境（推荐使用 conda）
 conda create -n taogubao python=3.10  # 如果卡住，请关闭代理
 conda activate taogubao
 
-# 安装依赖（务必使用 --no-deps，总依赖大小约 500MB）
+# 安装依赖（有依赖冲突可以加 --no-deps，总依赖大小约 500MB）
 pip install -r requirements.txt --no-deps
 ```
 
